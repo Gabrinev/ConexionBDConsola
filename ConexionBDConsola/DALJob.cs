@@ -79,6 +79,77 @@ namespace ConexionBDConsola
                 return null;
             }
         }
+
+        public List<Job> SelectJobsManagers()
+        {
+            try
+            {
+                cnx.OpenConection();
+
+                string sql = @"
+                SELECT *
+                FROM jobs
+                WHERE job_title like '%Manager%'";
+
+                SqlCommand cmd = new SqlCommand(sql, cnx.conexion);
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+
+                    temp = new Job(Convert.ToInt32(dr[0]), dr[1].ToString(), Convert.ToDecimal(dr[2]), Convert.ToInt32(dr[3]));
+                    jobs.Add(temp);
+
+                }
+                dr.Close();
+                cnx.CloseConnection();
+                return jobs;
+            }
+            catch (Exception ee)
+            {
+
+                Console.WriteLine("No se ha podido hacer el select " + ee);
+                return null;
+            }
+        }
+
+        public List<Job> SelectJobsSalary(Decimal filt)
+        {
+            try
+            {
+                cnx.OpenConection();
+
+                string sql = @"
+                SELECT *
+                FROM jobs
+                WHERE @filt > min_salary AND @filt < max_salary";
+
+                SqlCommand cmd = new SqlCommand(sql, cnx.conexion);
+                SqlParameter filtr = new SqlParameter("@filt", filt);
+                
+                cmd.Parameters.Add(filtr);
+              
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+
+                    temp = new Job(Convert.ToInt32(dr[0]), dr[1].ToString(), Convert.ToDecimal(dr[2]), Convert.ToInt32(dr[3]));
+                    jobs.Add(temp);
+
+                }
+                dr.Close();
+                cnx.CloseConnection();
+                return jobs;
+            }
+            catch (Exception ee)
+            {
+
+                Console.WriteLine("No se ha podido hacer el select " + ee);
+                return null;
+            }
+        }
+
+
         public Job Select1Job(int id)
         {
             try

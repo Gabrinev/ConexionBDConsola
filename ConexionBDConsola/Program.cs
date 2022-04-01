@@ -13,6 +13,7 @@ namespace ConexionBDConsola
         {
 
             int option = menu();
+            int fltrOption;
 
             while (option != 0)
             {
@@ -31,6 +32,17 @@ namespace ConexionBDConsola
                         removeJob();
                         break;
                     case 5:
+                        fltrOption = menuFiltros();
+                        switch (fltrOption)
+                        {
+                            case 1:
+                                showManagers();
+                                break;
+                            case 2:
+                                showFiltrSalary();
+                                break;
+
+                        }
                         
 
                         break;
@@ -51,6 +63,31 @@ namespace ConexionBDConsola
             Console.WriteLine("Pulse 2 para añadir uno nuevo");
             Console.WriteLine("Pulse 3 para modificar uno existente");
             Console.WriteLine("Pulse 4 para eliminar uno");
+            Console.WriteLine("Pulse 5 para listar con filtros");
+            Console.WriteLine("Cualquier otra tecla para salir...");
+
+            int bowl; // Variable to hold number
+            ConsoleKeyInfo UserInput = Console.ReadKey(); // Get user input
+            if (char.IsDigit(UserInput.KeyChar))
+            {
+                bowl = int.Parse(UserInput.KeyChar.ToString()); // use Parse if it's a Digit
+                return bowl;
+            }
+            else
+            {
+                bowl = 0;  // Else we assign a default value
+                return bowl;
+            }
+        }
+
+        public static int menuFiltros()
+        {
+            Console.Clear();
+            Console.WriteLine("");
+            Console.WriteLine("FILTROS");
+            Console.WriteLine("");
+            Console.WriteLine("Pulse 1 para listar los MANAGERS");
+            Console.WriteLine("Pulse 2 para listar jobs que puedand tener un salario");            
             Console.WriteLine("Cualquier otra tecla para salir...");
 
             int bowl; // Variable to hold number
@@ -89,9 +126,41 @@ namespace ConexionBDConsola
 
         private static void showJobs()
         {
+            
             Console.WriteLine("");
             DALJob daljob = new DALJob();
             jobslist = daljob.SelectJobs();
+
+            foreach (Job j in jobslist)
+            {
+                Console.WriteLine(j.ToString());
+            }
+            Console.WriteLine("Cualquier otra tecla para salir...");
+            Console.ReadKey();
+        }
+
+        private static void showManagers()
+        {
+            Console.WriteLine("");
+            DALJob daljob = new DALJob();
+            jobslist = daljob.SelectJobsManagers();
+
+            foreach (Job j in jobslist)
+            {
+                Console.WriteLine(j.ToString());
+            }
+            Console.WriteLine("Cualquier otra tecla para salir...");
+            Console.ReadKey();
+        }
+
+        private static void showFiltrSalary()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Salario a filtrar: ");
+            Decimal n = Convert.ToDecimal(Console.ReadLine());
+            
+            DALJob daljob = new DALJob();
+            jobslist = daljob.SelectJobsSalary(n);
 
             foreach (Job j in jobslist)
             {
